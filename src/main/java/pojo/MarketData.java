@@ -8,8 +8,8 @@ import java.time.Instant;
 @NoArgsConstructor @Getter @Setter @EqualsAndHashCode @ToString
 public class MarketData {
     private Instant updateTime;
-    private String symbol;
-    private Price price;
+    private String  symbol;
+    private Price   price;
 
     public MarketData(Instant updateTime, String symbol, Price price){
         this.updateTime = updateTime;

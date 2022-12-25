@@ -14,14 +14,14 @@ public class Price {
     private double last;
 
     public Price(double bid, double ask, double last){
-        this.bid = bid;
-        this.ask = ask;
+        this.bid  = bid;
+        this.ask  = ask;
         this.last = last;
     }
 
     public Price(Price price) {
-        this.bid = price.bid;
-        this.ask = price.ask;
+        this.bid  = price.bid;
+        this.ask  = price.ask;
         this.last = price.last;
     }
 }

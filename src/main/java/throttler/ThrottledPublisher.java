@@ -36,20 +36,25 @@ public class ThrottledPublisher implements IThrottledPublisher {
         if (conflatingQueue.isEmpty()) return;
         Set<String> pendingSymbolsForPublishing = conflatingQueue.getPendingSymbolsForPublishing();
         int origNoOfPendingSymbols = pendingSymbolsForPublishing.size();
-        int symbolPublishingTryCounter = 0;
+        int counter = 0, successfulCounter=0;
         while (!pendingSymbolsForPublishing.isEmpty()) {
             MarketData marketData = conflatingQueue.peek();
-            symbolPublishingTryCounter++;
+            counter++;
             if (marketData != null) {
-                if (slidingWindow.canPublish(marketData.getSymbol())) {
-                    publishCounts.put(marketData.getSymbol(), publishCounts.getOrDefault(marketData.getSymbol(), 0) + 1);
+                String symbol = marketData.getSymbol();
+                if (slidingWindow.canPublish(symbol)) {
+                    publishCounts.put(symbol, publishCounts.getOrDefault(symbol, 0) + 1);
                     marketDataProcessor.publishAggregatedMarketData(marketData); //Ideally if the return type is boolean, then only after we successfully publish the aggregated data, we must remove from pendingSymbols and conflation queue.
                     logger.info("publishAggregatedMarketData: " + marketData +" publishCounts="+ publishCounts + " currentSlidingWindowSize="+ slidingWindow.getSize());
-                    pendingSymbolsForPublishing.remove(marketData.getSymbol());
+                    pendingSymbolsForPublishing.remove(symbol);
+                    successfulCounter++;
                     conflatingQueue.take();
                 }
             }
-            if (symbolPublishingTryCounter == origNoOfPendingSymbols) {//Tried all the pending symbols in this iteration and published whatever it could, will leave the rest for next iteration
+            if (counter == origNoOfPendingSymbols) {//Tried all the pending symbols in this iteration and published whatever it could, will leave the rest for next iteration
+                if(successfulCounter>0) {
+                    logger.info("No of symbols successfully published in this iteration=" + successfulCounter);
+                }
                 return;
             }
         }

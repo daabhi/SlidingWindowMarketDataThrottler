@@ -12,11 +12,11 @@ public class ConflatingQueue {
 
     private final Map<String, MarketData> marketDataSymbolMap;
     private final Queue<String>           symbols;
-    private final Set<String> pendingSymbolsForPublishing;
+    private final Set<String>             pendingSymbolsForPublishing;
 
     public ConflatingQueue(int size) {
-        marketDataSymbolMap = new HashMap<>(size);
-        symbols             = new LinkedBlockingQueue<>(5000);
+        marketDataSymbolMap         = new HashMap<>(size);
+        symbols                     = new LinkedBlockingQueue<>(5000);
         pendingSymbolsForPublishing = new LinkedHashSet<>();
     }
 
