@@ -14,6 +14,10 @@ public class SlidingWindow {
         this.timeIntervalInMillisecs = intervalInSecs*1000;
     }
 
+    public int getSize(){
+        return slidingWindow.size();
+    }
+
     public boolean canPublish(String symbol){
         return isAllowed() && shouldPublishSymbolWithinWindow(symbol);
     }

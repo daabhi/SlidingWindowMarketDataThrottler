@@ -28,15 +28,13 @@ public class MarketDataGenerator {
 
     public Queue<MarketData> generateMockMarketData() {
         count++;
-        Queue<MarketData> mockData = new ArrayDeque<>();
         List<String> mockSymbols = IntStream.range(0, noOfSymbols).mapToObj(i -> "A" + i).collect(Collectors.toCollection(() -> new ArrayList<>(100)));
         for (int i = 1; i <= noOfRecordsPerSymbol; i++) {
             for (String symbol : mockSymbols) {
                 MarketData data = new MarketData(Instant.now().plus(count, ChronoUnit.MILLIS),symbol,new Price(count+i, count+i + i, count+i - 1));
-                mockData.offer(data);
+                mockMarketData.offer(data);
             }
         }
-        mockMarketData.addAll(mockData);
-        return mockData;
+        return mockMarketData;
     }
 }

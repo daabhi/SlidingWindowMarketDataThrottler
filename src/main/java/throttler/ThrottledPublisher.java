@@ -44,7 +44,7 @@ public class ThrottledPublisher implements IThrottledPublisher {
                 if (slidingWindow.canPublish(marketData.getSymbol())) {
                     publishCounts.put(marketData.getSymbol(), publishCounts.getOrDefault(marketData.getSymbol(), 0) + 1);
                     marketDataProcessor.publishAggregatedMarketData(marketData); //Ideally if the return type is boolean, then only after we successfully publish the aggregated data, we must remove from pendingSymbols and conflation queue.
-                    logger.info("publishAggregatedMarketData: " + marketData);
+                    logger.info("publishAggregatedMarketData: " + marketData +" publishCounts="+ publishCounts + " currentSlidingWindowSize="+ slidingWindow.getSize());
                     pendingSymbolsForPublishing.remove(marketData.getSymbol());
                     conflatingQueue.take();
                 }

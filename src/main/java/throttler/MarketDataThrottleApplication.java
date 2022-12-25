@@ -5,6 +5,7 @@ import interfaces.IThrottledPublisher;
 import pojo.ConflatingQueue;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class MarketDataThrottleApplication {
@@ -22,7 +23,7 @@ public class MarketDataThrottleApplication {
         IMarketDataProcessor marketDataProcessor  = new MarketDataProcessor(marketDataGenerator, conflatingQueue);
         IThrottledPublisher throttledPublisher    = new ThrottledPublisher(conflatingQueue, marketDataProcessor, slidingWindow);
 
-        publisherExecutor.scheduleAtFixedRate(() -> marketDataGenerator.generateMockMarketData().forEach(marketDataProcessor::onMessage), 0, 10, TimeUnit.MILLISECONDS);
+        publisherExecutor.scheduleAtFixedRate(() -> marketDataGenerator.generateMockMarketData().forEach(marketDataProcessor::onMessage), 0, 1, TimeUnit.MILLISECONDS);
         consumerExecutor.scheduleAtFixedRate(throttledPublisher::publishData, 0, 100, TimeUnit.MILLISECONDS);
     }
 }
