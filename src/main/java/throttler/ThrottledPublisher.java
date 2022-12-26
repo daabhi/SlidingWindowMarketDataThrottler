@@ -5,23 +5,16 @@ import interfaces.IThrottledPublisher;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import pojo.ConflatingQueue;
 import pojo.MarketData;
 
-import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-class SymbolComparator implements Comparator<String>{
-    public int compare(String a,String b){
-        int aInt = Integer.parseInt(a.substring(1));
-        int bInt = Integer.parseInt(b.substring(1));
-        return Integer.compare(aInt,bInt);
-    }
-}
 
 @Getter @Setter @ToString
 public class ThrottledPublisher implements IThrottledPublisher {
@@ -29,7 +22,15 @@ public class ThrottledPublisher implements IThrottledPublisher {
     private final ConflatingQueue conflatingQueue;
     private final IMarketDataProcessor marketDataProcessor;
     private final SlidingWindow         slidingWindow;
-    private final Map<String, Integer>  publishCounts = new TreeMap<>(new SymbolComparator());
+    private final Map<String, Integer>  publishCounts = new TreeMap<>((a,b)->{
+        if (StringUtils.isNumeric(a.substring(1)) && StringUtils.isNumeric(b.substring(1))) {//This is just to have convenience in seeing the publish counts in order
+            int aInt = Integer.parseInt(a.substring(1));
+            int bInt = Integer.parseInt(b.substring(1));
+            return Integer.compare(aInt, bInt);
+        }else{
+            return StringUtils.compare(a,b);
+        }
+    });
 
     public ThrottledPublisher(ConflatingQueue conflatingQueue, IMarketDataProcessor marketDataProcessor, SlidingWindow slidingWindow) {
         this.conflatingQueue     = conflatingQueue;

@@ -5,7 +5,7 @@ import lombok.*;
 import java.time.Instant;
 
 
-@NoArgsConstructor @Getter @Setter @EqualsAndHashCode @ToString
+@NoArgsConstructor @Getter @Setter @EqualsAndHashCode @ToString @Builder
 public class MarketData {
     private Instant updateTime;
     private String  symbol;
