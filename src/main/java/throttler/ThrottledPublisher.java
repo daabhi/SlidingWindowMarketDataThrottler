@@ -52,11 +52,11 @@ public class ThrottledPublisher implements IThrottledPublisher {
                 }
             }
             if (counter == origNoOfPendingSymbols) {//Tried all the pending symbols in this iteration and published whatever it could, will leave the rest for next iteration
-                if(successfulCounter>0) {
-                    logger.info("No of symbols successfully published in this iteration=" + successfulCounter);
-                }
-                return;
+                break;
             }
+        }
+        if(successfulCounter>0) {
+            logger.debug("No of symbols successfully published in this iteration=" + successfulCounter);
         }
     }
 }
