@@ -35,7 +35,7 @@ public class MarketDataThrottleApplication {
             if(count.get()%100==0){
                 logger.info("Giving the consumer some breathing space for 5 secs. Have published "+ count + " ticks so far");
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(5000);//There is no reason to add Thread.sleep here but just want to highlight in the logs that the sliding window shrinks in the throttled publisher when the producer is giving the throttled publisher breathing space
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
