@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Getter @Setter @ToString @EqualsAndHashCode
@@ -17,7 +18,7 @@ public class ConflatingQueue {
     public ConflatingQueue(int size) {
         marketDataSymbolMap         = new HashMap<>(size);
         symbols                     = new LinkedBlockingQueue<>(5000);
-        pendingSymbolsForPublishing = new LinkedHashSet<>();
+        pendingSymbolsForPublishing = new ConcurrentSkipListSet<>(); //maintains insertion order concurrently
     }
 
     /**

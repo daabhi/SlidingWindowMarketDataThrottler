@@ -10,9 +10,18 @@ import org.apache.log4j.Logger;
 import pojo.ConflatingQueue;
 import pojo.MarketData;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+class SymbolComparator implements Comparator<String>{
+    public int compare(String a,String b){
+        int aInt = Integer.parseInt(a.substring(1));
+        int bInt = Integer.parseInt(b.substring(1));
+        return Integer.compare(aInt,bInt);
+    }
+}
 
 @Getter @Setter @ToString
 public class ThrottledPublisher implements IThrottledPublisher {
@@ -20,7 +29,7 @@ public class ThrottledPublisher implements IThrottledPublisher {
     private final ConflatingQueue conflatingQueue;
     private final IMarketDataProcessor marketDataProcessor;
     private final SlidingWindow         slidingWindow;
-    private final Map<String, Integer>  publishCounts = new TreeMap<>();
+    private final Map<String, Integer>  publishCounts = new TreeMap<>(new SymbolComparator());
 
     public ThrottledPublisher(ConflatingQueue conflatingQueue, IMarketDataProcessor marketDataProcessor, SlidingWindow slidingWindow) {
         this.conflatingQueue     = conflatingQueue;
