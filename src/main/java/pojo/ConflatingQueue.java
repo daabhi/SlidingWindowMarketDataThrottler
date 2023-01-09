@@ -18,7 +18,7 @@ public class ConflatingQueue {
     public ConflatingQueue(int size) {
         marketDataSymbolMap         = new HashMap<>(size);
         symbols                     = new ArrayDeque<>(5000);
-        pendingSymbolsForPublishing = new ConcurrentSkipListSet<>(); //maintains insertion order concurrently
+        pendingSymbolsForPublishing = Collections.synchronizedSet(new LinkedHashSet<>()); //maintains insertion order concurrently
     }
 
     /**

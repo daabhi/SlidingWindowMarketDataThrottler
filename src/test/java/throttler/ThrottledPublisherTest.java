@@ -6,6 +6,7 @@ import pojo.MarketData;
 import pojo.Price;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +44,14 @@ public class ThrottledPublisherTest {
         Thread.sleep(1000);
         throttledPublisher.publishData();
         assertEquals("{A0=1, A1=1, A2=1, A3=1, A4=1, A5=1, A6=1, A7=1, A8=1}", throttledPublisher.getPublishCounts().toString(), "9 messages have been published after 3 secs");
+
+        marketDataProcessor.onMessage(new MarketData(Instant.now().plus(1, ChronoUnit.MILLIS),"A9",new Price(21, 21, 21)));
+        marketDataProcessor.onMessage(new MarketData(Instant.now().plus(1, ChronoUnit.MILLIS),"A8",new Price(21, 21, 21)));
+
+        Thread.sleep(1000);
+        throttledPublisher.publishData();
+        assertEquals("{A0=1, A1=1, A2=1, A3=1, A4=1, A5=1, A6=1, A7=1, A8=2, A9=1}", throttledPublisher.getPublishCounts().toString(), "9 messages have been published after 3 secs");
+
     }
 
     /**
